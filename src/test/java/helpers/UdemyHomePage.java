@@ -29,21 +29,16 @@ public class UdemyHomePage extends BaseHelper {
         driver.get("https://www.udemy.com/");
     }
 
-    private void clickOnSearch(){
-        searchField.click();
-    }
-
     private void enterTerm(String term){
         searchField.sendKeys(term);
     }
 
     private void clickOnDropdownOption(){
 //        wdWait.until(ExpectedConditions.attributeContains(By.className("udlite-search-form-autocomplete-suggestions"), "aria-expanded", "true"));
-
         wdWait.until(ExpectedConditions.visibilityOf(dropdownOptions));
-       WebElement options = dropdownOptions.findElement(By.tagName("li"));
+//        WebElement options = dropdownOptions.findElement(By.tagName("li"));
 
-//        WebElement options = driver.findElement(By.xpath("/html/body/div[1]/div[2]/div[3]/div[2]/form/ul/li"));
+        WebElement options = driver.findElement(By.xpath("/html/body/div[1]/div[2]/div[3]/div[2]/form/ul/li"));
        List<WebElement> listOfOptions = options.findElements(By.tagName("a"));
        System.out.println("Options size: " + listOfOptions.size());
 
@@ -53,7 +48,6 @@ public class UdemyHomePage extends BaseHelper {
 
     public void searchViaSearchField(String term){
         navigateToSite();
-        clickOnSearch();
         enterTerm(term);
         clickOnDropdownOption();
     }
@@ -98,7 +92,7 @@ public class UdemyHomePage extends BaseHelper {
 
     }
 
-    public void hoverAndChooseField(){
+    public void searchViaHover(){
         navigateToSite();
         hoverOverCategories();
         hoverOverField();

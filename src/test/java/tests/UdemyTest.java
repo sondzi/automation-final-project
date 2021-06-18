@@ -19,7 +19,7 @@ public class UdemyTest extends BaseTest{
     @Test
     public void udemyHoverTest() throws InterruptedException {
         UdemyHomePage homePage = new UdemyHomePage(driver);
-        homePage.hoverAndChooseField();
+        homePage.searchViaHover();
 
         //visual confirmation
         Thread.sleep(3000);
