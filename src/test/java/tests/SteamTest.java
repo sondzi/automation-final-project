@@ -1,10 +1,10 @@
 package tests;
 
-import helpers.SteamHomePage;
-import helpers.SteamSignInPage;
+import helpers.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -36,7 +36,7 @@ public class SteamTest extends BaseTest {
 //        wdWait.until(ExpectedConditions.visibilityOf(popupMenu));
         List<WebElement> dropdownOptions = popupMenu.findElements(By.className("popup_menu_item"));
         WebElement logout = dropdownOptions.get(2);
-        System.out.println("nadam se logout: "+ logout.getText());
+//        System.out.println("nadam se logout: "+ logout.getText());
         Assert.assertTrue("Doesn't contain logout", logout.getText().contains("Logout")); //mozda napisati jos jedan sa acc name
 
 
@@ -63,6 +63,45 @@ public class SteamTest extends BaseTest {
         Assert.assertTrue("No sign in button", loginButton.getText().contains("Sign In"));
 
         //visual confirmation
+        Thread.sleep(3000);
+    }
+
+    @Test
+    public void addAndRemoveFromCartTest() throws InterruptedException {
+        SteamHomePage homePage = new SteamHomePage(driver);
+        homePage.pickCategory();
+
+        ActionRPGPage actionRPGPage = new ActionRPGPage(driver);
+        actionRPGPage.chooseFromRecommended();
+
+        GamePage gamePage = new GamePage(driver);
+        gamePage.addToCart();
+
+        CartPage cartPage = new CartPage(driver);
+        cartPage.addCartItems();
+
+        System.out.println("addedGames list size: " + gamePage.addedGames.size());
+        System.out.println("cart games size: " + cartPage.cartGames.size());
+        cartPage.removeCartItems();
+    //think about assert!
+
+        //List sizes is the same
+        Assert.assertEquals("Lists aren't the same size", gamePage.addedGames.size(), cartPage.cartGames.size());
+        for(int i = 0; i < gamePage.addedGames.size(); i++){
+            WebElement currentCartGame = cartPage.cartGames.get(i);
+            WebElement cartItemDesc = currentCartGame.findElement(By.className("cart_item_desc"));
+            String cartGameName = cartItemDesc.getText();
+
+
+           //proveriti da li su imena ista
+        }
+
+        //remove all assert
+        String estimatedTotalText = driver.findElement(By.id("cart_estimated_total")).getText().replace("€", "").replace("-", "").replace(",", "").trim();
+        int estimatedTotal = Integer.parseInt(estimatedTotalText);
+
+        Assert.assertEquals(0, estimatedTotal);
+
         Thread.sleep(3000);
     }
 }

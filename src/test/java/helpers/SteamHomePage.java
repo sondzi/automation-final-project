@@ -3,8 +3,10 @@ package helpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
@@ -19,15 +21,13 @@ public class SteamHomePage extends BaseHelper{
         PageFactory.initElements(driver, this);
     }
 
+    //Go to signIn page
     private void navigateToSite(){
         driver.get("https://store.steampowered.com/");
     }
 
     private void clickOnLoginButton(){
         List<WebElement> globalActionMenu = actionsMenu.findElements(By.className("global_action_link"));
-//        System.out.println("Nav bar size: " + globalActionMenu.size());
-//        System.out.println("Nav bar: " + globalActionMenu.get(0).getText());
-//        System.out.println("Nav bar: " + globalActionMenu.get(1).getText());
         WebElement loginButton = globalActionMenu.get(0);
         loginButton.click();
     }
@@ -37,15 +37,34 @@ public class SteamHomePage extends BaseHelper{
         clickOnLoginButton();
     }
 
-    //While logged in
+    @FindBy(id = "genre_tab")
+    WebElement categories;
 
-    public String activeUser;
+    @FindBy(id = "genre_flyout")
+    WebElement hoverMenu;
 
+    //go to ActionRPG page
+    private void hoverOverCategories(){
+        Actions hover = new Actions(driver);
+        hover.moveToElement(categories).build().perform();
+    }
+
+    private void clickOnCategory(){
+        wdWait.until(ExpectedConditions.visibilityOf(hoverMenu));
+        List<WebElement> allGenres = hoverMenu.findElements(By.className("popup_genre_expand_content"));
+        WebElement rolePlaying = allGenres.get(2);
+        List<WebElement> rpgList = rolePlaying.findElements(By.className("popup_menu_item"));
+        WebElement actionRPG = rpgList.get(0);
+//        System.out.println("action rpg: " +actionRPG.getText());
+//        System.out.println("All genres: " + allGenres.size());
+//        System.out.println("Third genre: " + rolePlaying.getText());
+        actionRPG.click();
+    }
+
+    public void pickCategory(){
+        navigateToSite();
+        hoverOverCategories();
+        clickOnCategory();
+    }
 
 }
-
-
-
-//automation.practice@yahoo.com
-// NiskiMaltezanin
-// u'4qTd;8Wr.
