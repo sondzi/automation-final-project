@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SteamTest extends BaseTest {
@@ -82,20 +83,31 @@ public class SteamTest extends BaseTest {
 
         System.out.println("addedGames list size: " + gamePage.addedGames.size());
         System.out.println("cart games size: " + cartPage.cartGames.size());
-        cartPage.removeCartItems();
     //think about assert!
 
         //List sizes is the same
         Assert.assertEquals("Lists aren't the same size", gamePage.addedGames.size(), cartPage.cartGames.size());
-        for(int i = 0; i < gamePage.addedGames.size(); i++){
+        Collections.reverse(cartPage.cartGames);
+        for(int i = 0; i < cartPage.cartGames.size(); i++){
             WebElement currentCartGame = cartPage.cartGames.get(i);
             WebElement cartItemDesc = currentCartGame.findElement(By.className("cart_item_desc"));
-            String cartGameName = cartItemDesc.getText();
+            WebElement cartItemDescName = cartItemDesc.findElement(By.tagName("a"));
+            String cartGameName = cartItemDescName.getText();
+
+            cartGameName = ChangeStrings.removeSpecialCharactersAndEditions(cartGameName);
+
+            Game gamePageCurrentGame = gamePage.addedGames.get(i);
+            String gamePageGameName = gamePageCurrentGame.name;
+            System.out.println("Game page current game name: " + gamePageGameName);
+            System.out.println("Cart game name index of: " + i + "\n" + "Cart game name: " + cartGameName);
+
+            Assert.assertEquals("GamePage game doesn't contain CartPage game name", gamePageGameName, cartGameName);
 
 
            //proveriti da li su imena ista
         }
 
+        cartPage.removeCartItems();
         //remove all assert
         String estimatedTotalText = driver.findElement(By.id("cart_estimated_total")).getText().replace("€", "").replace("-", "").replace(",", "").trim();
         int estimatedTotal = Integer.parseInt(estimatedTotalText);

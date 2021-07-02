@@ -44,7 +44,6 @@ public class GamePage extends BaseHelper {
         PageFactory.initElements(driver, this);
     }
 
-
     public void addToCart() {
 
 //        boolean hasAgeCheck = !driver.findElements(By.className("agegate_birthday_selector")).isEmpty();
@@ -54,13 +53,10 @@ public class GamePage extends BaseHelper {
             AgeCheck ageCheck = new AgeCheck(driver);
             ageCheck.selectDOBAndGoToCart();
         }
-
         wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("game_background_glow")));
-        if (name.getText().contains("™")) {
-            gameName = name.getText().replace("™", "").trim();
-        } else {
-            gameName = name.getText();
-        }
+
+//        gameName = name.getText().replace("™", "").replace("®", "").trim();
+        gameName = ChangeStrings.removeSpecialCharactersAndEditions(name.getText());
         originalPrice = origPrice.getText().replace("€", "").trim();
         discountPrice = discPrice.getText().replace("€", "").trim();
         discountPercentage = discountPerc.getText().replace("%", "").replace("-", "").trim();
@@ -74,7 +70,7 @@ public class GamePage extends BaseHelper {
         game.tags = tags;
         addedGames.add(game);
         Game addedGame = addedGames.get(0);
-        System.out.println("Game:" + "\n" + addedGame);
+//        System.out.println("Game:" + "\n" + addedGame);
 
         addToCartButton.click();
 

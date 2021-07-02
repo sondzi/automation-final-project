@@ -70,6 +70,7 @@ public class CartPage extends BaseHelper {
             addFromRecommended();
             GamePage gamePage = new GamePage(driver);
             gamePage.addToCart();
+            wdWait.until(ExpectedConditions.visibilityOf(cartItems));
             cartGames = cartItems.findElements(By.className("cart_item"));
         }
     }
