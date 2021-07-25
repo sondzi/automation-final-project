@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AgeCheck extends BaseHelper {
 
-    @FindBy(className = "agegate_text_container")
+    @FindBy(className = "btns")
     WebElement viewPageCancelButtons;
 
     WebDriver driver;
@@ -39,10 +39,11 @@ public class AgeCheck extends BaseHelper {
 
     private void clickViewPage(){
 //        List<WebElement> viewPageCancel = viewPageCancelButtons.findElements(By.className("btnv6_blue_hoverfade"));
+        List<WebElement> viewPageCancel = viewPageCancelButtons.findElements(By.tagName("a"));
+
 //        System.out.println("Buttons: " + viewPageCancel.size());
-//        WebElement viewPageButton = viewPageCancel.get(0);
-//        viewPageButton.click();
-        WebElement viewPageButton = driver.findElement(By.xpath("/html/body/div[1]/div[7]/div[4]/div/div[2]/div/div[1]/div[3]/a[1]/span"));
+        WebElement viewPageButton = viewPageCancel.get(0);
+//        WebElement viewPageButton = driver.findElement(By.xpath("/html/body/div[1]/div[7]/div[4]/div/div[2]/div/div[1]/div[4]/a[1]/span"));
         viewPageButton.click();
     }
 

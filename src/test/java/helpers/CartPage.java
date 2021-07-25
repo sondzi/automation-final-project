@@ -32,6 +32,7 @@ public class CartPage extends BaseHelper {
 
     public List<WebElement> cartGames;
 
+
     private void addFromRecommended(){
         wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("checkout_content_box")));
 
@@ -76,7 +77,7 @@ public class CartPage extends BaseHelper {
     }
 
     public void removeCartItems(){
-        removeOneItem();
+//        removeOneItem();
         removeAllItems();
     }
 }

@@ -8,6 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
+import java.util.Random;
 
 public class ActionRPGPage extends BaseHelper {
 
@@ -24,6 +25,11 @@ public class ActionRPGPage extends BaseHelper {
         wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("contenthub_specials_ctn")));
         List<WebElement> recommended = recommendedSpecials.findElements(By.className("contenthub_specials_grid_cell"));
         System.out.println("Number of recommended: " + recommended.size());
+
+        // wanted to do random, but have to make exceptions for free games, demos etc.
+//        Random rand = new Random();
+//        int randomIndex = rand.nextInt(recommended.size());
+//        System.out.println("Random index for recommended specials: " + randomIndex);
 
         WebElement actionRPGGame = recommended.get(10);
         actionRPGGame.click();

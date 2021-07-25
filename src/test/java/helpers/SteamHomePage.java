@@ -43,6 +43,7 @@ public class SteamHomePage extends BaseHelper{
     @FindBy(id = "genre_flyout")
     WebElement hoverMenu;
 
+
     //go to ActionRPG page
     private void hoverOverCategories(){
         Actions hover = new Actions(driver);
@@ -65,6 +66,33 @@ public class SteamHomePage extends BaseHelper{
         navigateToSite();
         hoverOverCategories();
         clickOnCategory();
+    }
+
+    //search
+
+    @FindBy(id = "store_nav_search_term")
+    WebElement searchBar;
+
+    @FindBy(id = "store_search_link")
+    WebElement magnifyingGlassIcon;
+
+    private void clickOnSearchBar(){
+        searchBar.click();
+    }
+
+    private void enterSearchTerm(String term){
+        searchBar.sendKeys(term);
+    }
+
+    private void clickOnMagnifyingGlassIcon(){
+        js.executeScript("arguments[0].click();", magnifyingGlassIcon);
+    }
+
+    public void searchTerm(String term){
+        navigateToSite();
+        clickOnSearchBar();
+        enterSearchTerm(term);
+        clickOnMagnifyingGlassIcon();
     }
 
 }
