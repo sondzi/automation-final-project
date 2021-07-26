@@ -6,12 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.util.List;
 import java.util.Random;
 
 public class CartPage extends BaseHelper {
-
     WebDriver driver;
     public CartPage(WebDriver driver){
         this.driver = driver;
@@ -32,21 +30,17 @@ public class CartPage extends BaseHelper {
 
     public List<WebElement> cartGames;
 
-
     private void addFromRecommended(){
         wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("checkout_content_box")));
-
         List<WebElement> recommended = recommendedGames.findElements(By.tagName("a"));
         Random rand = new Random();
         int randomIndex = rand.nextInt(recommended.size());
         WebElement randomRecommended = recommended.get(randomIndex);
         randomRecommended.click();
         recommended.remove(randomIndex);
-
-
     }
 
-
+    //out for now
     private void removeOneItem(){
         wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("checkout_content_box")));
         cartGames = cartItems.findElements(By.className("cart_item"));
@@ -59,6 +53,7 @@ public class CartPage extends BaseHelper {
     private void removeAllItems(){
         wdWait.until(ExpectedConditions.visibilityOf(cartItems));
         removeAllItems.click();
+
         wdWait.until(ExpectedConditions.visibilityOf(areYouSureRemoveAll));
         WebElement buttonsBanner = areYouSureRemoveAll.findElement(By.className("newmodal_buttons"));
         List<WebElement> yesNoButtons = buttonsBanner.findElements(By.className("btn_green_steamui"));

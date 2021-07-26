@@ -1,9 +1,10 @@
-package tests;
+package Udemy;
 
-import helpers.UdemyHomePage;
+import Udemy.UdemyHomePage;
 import org.junit.Test;
+import tests.BaseTest;
 
-public class UdemyTest extends BaseTest{
+public class UdemyTest extends BaseTest {
 
     @Test
     public void udemySearchTest() throws InterruptedException {

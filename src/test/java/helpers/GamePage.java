@@ -6,14 +6,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class GamePage extends BaseHelper {
-
     @FindBy(id = "appHubAppName")
     WebElement name;
+
+    @FindBy(className = "game_purchase_price")
+    WebElement price;
 
     @FindBy(className = "discount_original_price")
     WebElement origPrice;
@@ -38,28 +39,31 @@ public class GamePage extends BaseHelper {
     public String tags;
 
     WebDriver driver;
-
     public GamePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    public void addToCart() {
-
-//        boolean hasAgeCheck = !driver.findElements(By.className("agegate_birthday_selector")).isEmpty();
+    private void ageCheck(){
         boolean hasAgeCheck = driver.findElements(By.className("agegate_birthday_selector")).size() != 0;
-
         if(hasAgeCheck){
             AgeCheck ageCheck = new AgeCheck(driver);
             ageCheck.selectDOBAndGoToCart();
         }
-        wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("game_background_glow")));
+    }
 
-//        gameName = name.getText().replace("™", "").replace("®", "").trim();
+    public Game getGameInfo(){
         gameName = ChangeStrings.removeSpecialCharactersAndEditions(name.getText());
-        originalPrice = origPrice.getText().replace("€", "").trim();
-        discountPrice = discPrice.getText().replace("€", "").trim();
-        discountPercentage = discountPerc.getText().replace("%", "").replace("-", "").trim();
+
+        boolean isDiscounted = driver.findElements(By.className("game_purchase_price")).size() == 0;
+        if(isDiscounted){
+            originalPrice = origPrice.getText().replace("€", "").trim();
+            discountPrice = discPrice.getText().replace("€", "").trim();
+            discountPercentage = discountPerc.getText().replace("%", "").replace("-", "").trim();
+        } else {
+            originalPrice = price.getText().replace("€", "").trim();
+        }
+
         tags = popularTags.getText();
 
         Game game = new Game();
@@ -68,12 +72,40 @@ public class GamePage extends BaseHelper {
         game.discountPrice = discountPrice;
         game.discountPercentage = discountPercentage;
         game.tags = tags;
+
+        return game;
+    }
+
+    public void addToCart() {
+        ageCheck();
+        wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("game_background_glow")));
+        Game game = this.getGameInfo();
         addedGames.add(game);
-        Game addedGame = addedGames.get(0);
-//        System.out.println("Game:" + "\n" + addedGame);
-
         addToCartButton.click();
+    }
 
+    @FindBy(id = "add_to_wishlist_area")
+    WebElement addToWishListButton;
 
+    @FindBy(id = "wishlist_link")
+    WebElement wishlistLink;
+
+    private void addToWishlist(){
+        ageCheck();
+        wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("game_background_glow")));
+
+        Game game = this.getGameInfo();
+        addedGames.add(game);
+
+        addToWishListButton.click();
+    }
+
+    private void clickOnWishlistLink(){
+        wishlistLink.click();
+    }
+
+    public void goToWishlist(){
+        addToWishlist();
+        clickOnWishlistLink();
     }
 }

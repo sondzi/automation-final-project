@@ -4,10 +4,8 @@ import helpers.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +13,6 @@ public class SteamTest extends BaseTest {
 
     @Test
     public void steamLoginValidCredentialsTest() throws InterruptedException {
-
         SteamHomePage homePage = new SteamHomePage(driver);
         homePage.goToSigninPage();
 
@@ -34,12 +31,9 @@ public class SteamTest extends BaseTest {
 
         accountDropdown.click();
         WebElement popupMenu = driver.findElement(By.id("account_dropdown"));
-//        wdWait.until(ExpectedConditions.visibilityOf(popupMenu));
         List<WebElement> dropdownOptions = popupMenu.findElements(By.className("popup_menu_item"));
         WebElement logout = dropdownOptions.get(2);
-//        System.out.println("nadam se logout: "+ logout.getText());
         Assert.assertTrue("Doesn't contain logout", logout.getText().contains("Logout"));
-
 
         // visual confirmation
         Thread.sleep(3000);
@@ -70,7 +64,7 @@ public class SteamTest extends BaseTest {
     @Test
     public void addAndRemoveFromCartTest() throws InterruptedException {
         SteamHomePage homePage = new SteamHomePage(driver);
-        homePage.pickCategory();
+        homePage.pickCategory(2, 0);
 
         ActionRPGPage actionRPGPage = new ActionRPGPage(driver);
         actionRPGPage.chooseFromRecommended();
@@ -81,11 +75,7 @@ public class SteamTest extends BaseTest {
         CartPage cartPage = new CartPage(driver);
         cartPage.addCartItems();
 
-        System.out.println("addedGames list size: " + gamePage.addedGames.size());
-        System.out.println("cart games size: " + cartPage.cartGames.size());
-    //think about assert!
-
-        //List sizes is the same
+        //List size is the same
         Assert.assertEquals("Lists aren't the same size", gamePage.addedGames.size(), cartPage.cartGames.size());
         Collections.reverse(cartPage.cartGames);
         double sumTotal = 0;
@@ -102,10 +92,12 @@ public class SteamTest extends BaseTest {
             System.out.println("Game page current game name: " + gamePageGameName);
             System.out.println("Cart game name index of: " + i + "\n" + "Cart game name: " + cartGameName);
 
+            // Are the games same
             Assert.assertEquals("Game names aren't the same", gamePageGameName, cartGameName);
 
             WebElement cartItemPriceElement = driver.findElements(By.className("cart_item_price")).get(i);
             List<WebElement> allPrices = cartItemPriceElement.findElements(By.tagName("div"));
+            // Checking if there are two prices displayed, original and discounted, by default it's not discounted
             int index = 0;
             if(allPrices.size() > 1){
                 index = 1;
@@ -121,6 +113,8 @@ public class SteamTest extends BaseTest {
         String estimatedTotalText = driver.findElement(By.id("cart_estimated_total")).getText().replace("€", "").replace(",", ".");
         double estimatedTotal = Double.parseDouble(estimatedTotalText);
         System.out.println("Double estimated total: " + estimatedTotal);
+
+        // Totals are the same
         Assert.assertEquals(estimatedTotal, sumTotal, 0.1);
 
         cartPage.removeCartItems();
@@ -128,6 +122,7 @@ public class SteamTest extends BaseTest {
         String estimatedTotalTextZero = driver.findElement(By.id("cart_estimated_total")).getText().replace("€", "").replace(",", ".").replace("-", "");
         double estimatedTotalZero = Double.parseDouble(estimatedTotalTextZero);
 
+        // Empty cart price is 0
         Assert.assertEquals(0, estimatedTotalZero, 0);
 
         Thread.sleep(3000);
@@ -152,4 +147,35 @@ public class SteamTest extends BaseTest {
         //visual confirmation
         Thread.sleep(3000);
     }
+
+    @Test
+    public void steamWishlistTest() throws InterruptedException {
+        SteamHomePage homePage = new SteamHomePage(driver);
+        homePage.goToSigninPage();
+        SteamSignInPage signInPage = new SteamSignInPage(driver);
+        String steamName = "NiskiMaltezanin";
+        String password = "u'4qTd;8Wr.";
+        signInPage.signIntoSteam(steamName, password);
+
+        wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("home_cluster_ctn")));
+
+        homePage.pickCategory(1, 3);
+
+        MetroidvaniaPage metroidvaniaPage = new MetroidvaniaPage(driver);
+        metroidvaniaPage.navigateToGamePage();
+
+        GamePage gamePage = new GamePage(driver);
+        gamePage.goToWishlist();
+
+        WishlistPage wishlistPage = new WishlistPage(driver);
+        wishlistPage.checkAndRemoveFromWishlist();
+        Assert.assertEquals(gamePage.gameName, wishlistPage.wishlistItemName);
+        int wishlistSize = Integer.parseInt(wishlistPage.wishlistItemCount);
+        Assert.assertEquals(wishlistSize, wishlistPage.wishlistItems.size());
+
+        Assert.assertEquals(wishlistPage.nothingToSeeHereText, "Oops, there's nothing to show here".toLowerCase());
+
+        Thread.sleep(3000);
+    }
+
 }

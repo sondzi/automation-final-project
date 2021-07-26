@@ -1,5 +1,6 @@
-package helpers;
+package Udemy;
 
+import helpers.BaseHelper;
 import org.checkerframework.checker.units.qual.A;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

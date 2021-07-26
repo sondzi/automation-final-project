@@ -8,7 +8,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SteamSignInPage extends BaseHelper {
-
     @FindBy(id = "input_username")
     WebElement steamNameField;
 
@@ -27,7 +26,6 @@ public class SteamSignInPage extends BaseHelper {
     private void enterSteamName(String steamName){
         wdWait.until(ExpectedConditions.presenceOfElementLocated(By.className("loginbox_content")));
         steamNameField.sendKeys(steamName);
-
     }
 
     private void enterPassword(String password){

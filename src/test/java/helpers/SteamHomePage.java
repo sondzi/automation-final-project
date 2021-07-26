@@ -7,11 +7,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.util.List;
 
 public class SteamHomePage extends BaseHelper{
-
     @FindBy(id = "global_action_menu")
     WebElement actionsMenu;
 
@@ -43,29 +41,25 @@ public class SteamHomePage extends BaseHelper{
     @FindBy(id = "genre_flyout")
     WebElement hoverMenu;
 
-
     //go to ActionRPG page
     private void hoverOverCategories(){
         Actions hover = new Actions(driver);
         hover.moveToElement(categories).build().perform();
     }
 
-    private void clickOnCategory(){
+    private void clickOnCategory(int indexCategory, int indexGenre){
         wdWait.until(ExpectedConditions.visibilityOf(hoverMenu));
         List<WebElement> allGenres = hoverMenu.findElements(By.className("popup_genre_expand_content"));
-        WebElement rolePlaying = allGenres.get(2);
+        WebElement rolePlaying = allGenres.get(indexCategory);
         List<WebElement> rpgList = rolePlaying.findElements(By.className("popup_menu_item"));
-        WebElement actionRPG = rpgList.get(0);
-//        System.out.println("action rpg: " +actionRPG.getText());
-//        System.out.println("All genres: " + allGenres.size());
-//        System.out.println("Third genre: " + rolePlaying.getText());
+        WebElement actionRPG = rpgList.get(indexGenre);
         actionRPG.click();
     }
 
-    public void pickCategory(){
+    public void pickCategory(int indexCategory, int indexGenre){
         navigateToSite();
         hoverOverCategories();
-        clickOnCategory();
+        clickOnCategory(indexCategory, indexGenre);
     }
 
     //search

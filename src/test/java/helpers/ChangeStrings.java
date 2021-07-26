@@ -1,9 +1,6 @@
 package helpers;
 
-import helpers.BaseHelper;
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +28,6 @@ public class ChangeStrings {
         String fixed = String.join(" ", nameWords);
 
         return fixed;
-        }
+    }
 
 }
